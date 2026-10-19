@@ -1,60 +1,48 @@
 (function () {
-  var burger = document.querySelector('.burger');
-  var mnav = document.getElementById('mnav');
-  function setMenu(open) {
-    if (!burger || !mnav) return;
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    mnav.classList.toggle('open', open);
-  }
-  if (burger && mnav) {
-    burger.addEventListener('click', function () {
-      setMenu(burger.getAttribute('aria-expanded') !== 'true');
-    });
-    mnav.addEventListener('click', function (e) {
-      if (e.target.closest('a')) setMenu(false);
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setMenu(false);
-    });
-    window.addEventListener('resize', function () {
-      if (window.innerWidth >= 1040) setMenu(false);
-    });
-  }
+  'use strict';
+  var doc = document, root = doc.documentElement;
+  root.classList.add('js');
+  var ru = root.lang === 'ru';
 
-  var form = document.getElementById('mailform');
-  if (!form) return;
-  function mark(input, bad) {
-    input.closest('.field').classList.toggle('bad', bad);
-    input.setAttribute('aria-invalid', bad ? 'true' : 'false');
+  /* header: solid after the hero top, mobile menu */
+  var hdr = doc.getElementById('top'), burger = hdr.querySelector('.burger'), mnav = doc.getElementById('mnav');
+  function solid() { hdr.classList.toggle('solid', window.scrollY > 30); }
+  solid(); window.addEventListener('scroll', solid, { passive: true });
+  function setMenu(open) {
+    hdr.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? (ru ? 'Закрыть' : 'Aizvērt') : (ru ? 'Меню' : 'Izvēlne'));
   }
-  function validContact(v) {
-    v = v.trim();
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return true;
-    var digits = v.replace(/[^\d]/g, '');
-    return /^[+\d][\d\s()\-+]*$/.test(v) && digits.length >= 7 && digits.length <= 15;
-  }
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var name = form.elements.name, contact = form.elements.contact, msg = form.elements.msg;
-    var okName = name.value.trim().length >= 2;
-    var okContact = validContact(contact.value);
-    var okMsg = msg.value.trim().length >= 3;
-    mark(name, !okName); mark(contact, !okContact); mark(msg, !okMsg);
-    if (!(okName && okContact && okMsg)) {
-      var first = form.querySelector('.field.bad input, .field.bad textarea');
-      if (first) first.focus();
-      return;
-    }
-    var d = form.dataset;
-    var body = d.bName + ': ' + name.value.trim() + '\n' +
-               d.bContact + ': ' + contact.value.trim() + '\n\n' +
-               msg.value.trim();
-    var href = 'mailto:' + d.to + '?subject=' + encodeURIComponent(d.subject) + '&body=' + encodeURIComponent(body);
-    window.location.href = href;
-  });
-  ['name', 'contact', 'msg'].forEach(function (n) {
-    form.elements[n].addEventListener('input', function () {
-      if (this.closest('.field').classList.contains('bad')) mark(this, false);
+  burger.addEventListener('click', function () { setMenu(!hdr.classList.contains('open')); });
+  mnav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && hdr.classList.contains('open')) { setMenu(false); burger.focus(); } });
+  doc.addEventListener('click', function (e) { if (hdr.classList.contains('open') && !hdr.contains(e.target)) setMenu(false); });
+
+  /* reveal on scroll */
+  var items = [].slice.call(doc.querySelectorAll('.rv'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+    items.forEach(function (el) { io.observe(el); });
+  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+
+  /* form -> mail program */
+  var form = doc.getElementById('cform');
+  if (form) {
+    var err = form.querySelector('.f-err');
+    var M = ru ? { name: 'Напишите своё имя.', contact: 'Укажите телефон или e-mail.', msg: 'Коротко напишите, что нужно сделать.', subj: 'Вопрос с сайта', n: 'Имя: ', c: 'Телефон или e-mail: ' }
+               : { name: 'Lūdzu, ierakstiet savu vārdu.', contact: 'Lūdzu, norādiet tālruni vai e-pastu.', msg: 'Lūdzu, īsi uzrakstiet, kas jādara.', subj: 'Jautājums no mājaslapas', n: 'Vārds: ', c: 'Tālrunis vai e-pasts: ' };
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = form.elements, name = f.name.value.trim(), contact = f.contact.value.trim(), msg = f.msg.value.trim();
+      [f.name, f.contact, f.msg].forEach(function (x) { x.removeAttribute('aria-invalid'); });
+      var okContact = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact) || contact.replace(/\D/g, '').length >= 7;
+      var bad = name.length < 2 ? [f.name, M.name] : (!okContact ? [f.contact, M.contact] : (msg.length < 5 ? [f.msg, M.msg] : null));
+      if (bad) { bad[0].setAttribute('aria-invalid', 'true'); err.textContent = bad[1]; err.hidden = false; bad[0].focus(); return; }
+      err.hidden = true;
+      var body = M.n + name + '\n' + M.c + contact + '\n\n' + msg;
+      window.location.href = 'mailto:' + form.getAttribute('data-mail') + '?subject=' + encodeURIComponent(M.subj) + '&body=' + encodeURIComponent(body);
     });
-  });
+  }
 })();
