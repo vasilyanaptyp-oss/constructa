@@ -1,0 +1,21 @@
+{
+ "name": "CONSTRUCTA",
+ "short_name": "CONSTRUCTA",
+ "start_url": "/constructa/",
+ "scope": "/constructa/",
+ "display": "browser",
+ "background_color": "#15171b",
+ "theme_color": "#15171b",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}
