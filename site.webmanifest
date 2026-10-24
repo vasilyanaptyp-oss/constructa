@@ -1,8 +1,8 @@
 {
  "name": "CONSTRUCTA",
  "short_name": "CONSTRUCTA",
- "start_url": "/constructa/",
- "scope": "/constructa/",
+ "start_url": "/",
+ "scope": "/",
  "display": "browser",
  "background_color": "#15171b",
  "theme_color": "#15171b",

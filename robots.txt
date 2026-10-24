@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vasylian.com/constructa/sitemap.xml
+Sitemap: https://constructa.lv/sitemap.xml
