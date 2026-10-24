@@ -53,7 +53,7 @@
   /* form -> mail program (window.__noNav lets the page test read the address without opening a mail program) */
   var form = doc.getElementById('cform');
   if (form) {
-    var err = form.querySelector('.f-err'), sel = form.elements.svc;
+    var err = form.querySelector('.f-err'), ok = form.querySelector('.f-ok'), sel = form.elements.svc;
     var q = location.search.match(/[?&]pakalpojums=([\w-]+)/);
     if (q && sel && sel.querySelector('option[value="' + q[1] + '"]')) sel.value = q[1];
     var M = ru ? { name: 'Напишите своё имя.', contact: 'Укажите телефон или e-mail.', msg: 'Коротко напишите, что нужно сделать.', subj: 'Вопрос с сайта', n: 'Имя: ', c: 'Телефон или e-mail: ', s: 'Услуга: ' }
@@ -64,12 +64,14 @@
       [f.name, f.contact, f.msg].forEach(function (x) { x.removeAttribute('aria-invalid'); });
       var okContact = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact) || contact.replace(/\D/g, '').length >= 7;
       var bad = name.length < 2 ? [f.name, M.name] : (!okContact ? [f.contact, M.contact] : (msg.length < 5 ? [f.msg, M.msg] : null));
-      if (bad) { bad[0].setAttribute('aria-invalid', 'true'); err.textContent = bad[1]; err.hidden = false; bad[0].focus(); return; }
+      if (bad) { bad[0].setAttribute('aria-invalid', 'true'); err.textContent = bad[1]; err.hidden = false; if (ok) ok.hidden = true; bad[0].focus(); return; }
       err.hidden = true;
       var svc = sel && sel.value ? sel.options[sel.selectedIndex].text : '';
       var body = M.n + name + '\n' + M.c + contact + (svc ? '\n' + M.s + svc : '') + '\n\n' + msg;
       var url = 'mailto:' + form.getAttribute('data-mail') + '?subject=' + encodeURIComponent(M.subj) + '&body=' + encodeURIComponent(body);
       window.__mailto = url;
+      /* the mail program may be missing (webmail users): say so, with the fallback address and phone */
+      if (ok) { ok.textContent = ok.getAttribute('data-t'); ok.hidden = false; }
       if (!window.__noNav) window.location.href = url;
     });
   }
