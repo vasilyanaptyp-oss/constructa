@@ -2,27 +2,35 @@
   'use strict';
   var doc = document, root = doc.documentElement;
   root.classList.add('js');
-  var ru = root.lang === 'ru';
-
-  /* 404: one page for both languages */
-  if (doc.body.classList.contains('p-404')) {
-    var isRu = /\/ru(\/|$)/.test(location.pathname);
-    [].forEach.call(doc.querySelectorAll('.nf-lang'), function (el) { el.classList.toggle('off', el.getAttribute('data-l') !== (isRu ? 'ru' : 'lv')); });
-  }
+  /* all visible words come from the page itself (data-* attributes written by build.py from content.py), so this file has no language of its own */
 
   /* header: solid after the hero top, mobile menu */
   var hdr = doc.getElementById('hdr'), burger = hdr.querySelector('.burger'), mnav = doc.getElementById('mnav');
+  var ld = doc.querySelector('.lang-dd'), ldt = ld && ld.querySelector('.lang-t');
   function solid() { hdr.classList.toggle('solid', window.scrollY > 30); }
   solid(); window.addEventListener('scroll', solid, { passive: true });
+  function setLang(open) {
+    if (!ld) return;
+    ld.classList.toggle('open', open); ldt.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
   function setMenu(open) {
+    if (open) setLang(false);
     hdr.classList.toggle('open', open);
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    burger.setAttribute('aria-label', open ? (ru ? 'Закрыть' : 'Aizvērt') : (ru ? 'Меню' : 'Izvēlne'));
+    burger.setAttribute('aria-label', open ? burger.getAttribute('data-l-close') : burger.getAttribute('data-l-open'));
   }
   burger.addEventListener('click', function () { setMenu(!hdr.classList.contains('open')); });
   mnav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
   doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && hdr.classList.contains('open')) { setMenu(false); burger.focus(); } });
   doc.addEventListener('click', function (e) { if (hdr.classList.contains('open') && !hdr.contains(e.target)) setMenu(false); });
+
+  /* phones: language button in the header opens a short list (desktop shows LV EN DE inline instead; the mobile menu has its own row) */
+  if (ldt) {
+    ldt.addEventListener('click', function (e) { e.stopPropagation(); if (!ld.classList.contains('open')) setMenu(false); setLang(!ld.classList.contains('open')); });
+    doc.addEventListener('click', function (e) { if (!ld.contains(e.target)) setLang(false); });
+    ld.addEventListener('focusout', function (e) { if (e.relatedTarget && !ld.contains(e.relatedTarget)) setLang(false); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ld.classList.contains('open')) { setLang(false); ldt.focus(); } });
+  }
 
   /* mobile menu: services sub-list */
   var mt = doc.querySelector('.m-t'), msub = doc.getElementById('m-svc');
@@ -56,8 +64,8 @@
     var err = form.querySelector('.f-err'), ok = form.querySelector('.f-ok'), sel = form.elements.svc;
     var q = location.search.match(/[?&]pakalpojums=([\w-]+)/);
     if (q && sel && sel.querySelector('option[value="' + q[1] + '"]')) sel.value = q[1];
-    var M = ru ? { name: 'Напишите своё имя.', contact: 'Укажите телефон или e-mail.', msg: 'Коротко напишите, что нужно сделать.', subj: 'Вопрос с сайта', n: 'Имя: ', c: 'Телефон или e-mail: ', s: 'Услуга: ' }
-               : { name: 'Lūdzu, ierakstiet savu vārdu.', contact: 'Lūdzu, norādiet tālruni vai e-pastu.', msg: 'Lūdzu, īsi uzrakstiet, kas jādara.', subj: 'Jautājums no mājaslapas', n: 'Vārds: ', c: 'Tālrunis vai e-pasts: ', s: 'Pakalpojums: ' };
+    var g = function (k) { return form.getAttribute('data-' + k); };
+    var M = { name: g('e-name'), contact: g('e-contact'), msg: g('e-msg'), subj: g('subj'), n: g('ln'), c: g('lc'), s: g('ls') };   /* texts: content.py e_name, e_contact, e_msg, subj, lab_n, lab_c, lab_s */
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var f = form.elements, name = f.name.value.trim(), contact = f.contact.value.trim(), msg = f.msg.value.trim();
