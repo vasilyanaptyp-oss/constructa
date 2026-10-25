@@ -884,3 +884,80 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
 /* viewer: a picture element now (AVIF / WebP / JPEG); horizontal swipes go to the script */
 .lb-pic{display:contents}
 .lb{touch-action:pan-y pinch-zoom}
+
+/* ======================================================================================================================
+   26.10 phase 2 (Oleg: «three directions marked, all of it, boxes with check marks», «Impressum, About us, Careers: all of it must be there»).
+   Same design: the habau.de band of three tabs with check-box icons and a dark panel with buttons; Objects filter by type of work;
+   Karjera with the openings; Rekvizīti; a hidden team section; the tightened About page.
+   ====================================================================================================================== */
+.dirs{background:var(--ink-2);color:var(--on-d);border-top:1px solid var(--line-d)}
+.dirs>.wrap{padding-top:clamp(28px,4vw,48px);padding-bottom:clamp(40px,5vw,72px)}
+.dtabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+.dtab{display:grid;justify-items:center;align-content:center;gap:10px;min-height:104px;padding:18px 10px;border:0;border-top:3px solid transparent;border-radius:2px 2px 0 0;
+  background:var(--ink-3);color:rgba(244,240,232,.8);font:600 15.5px/1.2 var(--display);letter-spacing:-.01em;text-align:center;cursor:pointer;
+  transition:background .2s ease,color .2s ease,border-color .2s ease}
+.dtab svg{width:34px;height:34px;stroke:var(--brass);stroke-width:1.9}
+.dtab span{min-width:0;overflow-wrap:normal;-webkit-hyphens:manual;hyphens:manual}   /* long names carry a soft hyphen (build.py TAB_SHY), never a break inside a syllable */
+.dtab:hover{background:#2c3139;color:var(--on-d)}
+.dtab[aria-selected="true"]{background:var(--ink);color:var(--on-d);border-top-color:var(--brass)}
+.dtab:focus-visible{outline:2px solid var(--brass);outline-offset:-5px}
+.dpanel{padding:clamp(24px,4vw,48px);background:var(--ink);border-radius:0 0 2px 2px}
+.dpanel[hidden]{display:none}
+.dpanel-h{font:600 clamp(1.5rem,3vw,2.3rem)/1.12 var(--display);letter-spacing:-.02em;color:var(--on-d);overflow-wrap:anywhere}
+.dpanel-h em{font-style:normal;color:var(--brass-2)}
+.dpanel-p{margin-top:14px;max-width:46rem;color:var(--muted-d);font-size:clamp(16px,1.4vw,17.5px)}
+.dpanel-l{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:10px 32px;max-width:56rem}
+.dpanel-l li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;font-weight:600;color:rgba(244,240,232,.9)}
+.dpanel-l svg{margin-top:3px;color:var(--brass)}
+.dpanel-b{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+@media (min-width:640px){ .dpanel-l{grid-template-columns:1fr 1fr} }
+@media (max-width:639px){
+  .dtab{min-height:88px;gap:8px;padding:14px 6px;font:700 13px/1.2 var(--sans);letter-spacing:0}
+  .dtab svg{width:28px;height:28px}
+  .dpanel-b .btn{flex:1 1 100%}
+}
+@media (max-width:359px){ .dtab{padding:12px 4px;font-size:12px} }
+
+/* Objects page: filter chips by type of work */
+.ol .ofilters{margin:0 0 26px}
+.orow[hidden],.oyear[hidden]{display:none}
+.oyear+.oyear{margin-top:0}
+.oyear{margin-bottom:clamp(36px,4vw,52px)}
+.ol .pj-note{margin-top:0}
+.mpin.off{opacity:.28}
+.mpin.off:hover,.mpin.off:focus-visible{opacity:1}
+
+/* About: the tightened page */
+.ab-text .ab-reg-p{font-size:15.5px}
+.ab-reg-p .link{margin-top:10px}
+.ab-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+/* the team (hidden until Oleg sends photos and names) */
+.team{background:var(--paper-2)}
+.team .eyebrow{color:var(--brass-d)}
+.team h2 em{color:var(--brass-d)}
+.tm-grid{list-style:none;margin:clamp(28px,4vw,44px) 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 20px}
+.tm-card{display:grid;justify-items:center;gap:6px;text-align:center;min-width:0}
+.tm-img,.tm-ini{width:min(140px,36vw);height:min(140px,36vw);border-radius:50%;object-fit:cover}
+.tm-ini{display:grid;place-items:center;background:var(--ink);color:var(--brass);font:600 34px/1 var(--display)}
+.tm-name{margin-top:10px;font:500 17px/1.25 var(--display);overflow-wrap:anywhere}
+.tm-role{font-size:14.5px;color:var(--muted-l)}
+@media (min-width:900px){ .tm-grid{grid-template-columns:repeat(4,minmax(0,1fr))} }
+
+/* Karjera */
+.kr{background:var(--paper)}
+.kr .eyebrow{color:var(--brass-d)}
+.kr h2 em{color:var(--brass-d)}
+.vac-list{list-style:none;margin:clamp(28px,4vw,44px) 0 0;padding:0;display:grid;gap:16px}
+.vac{display:grid;align-content:start;gap:10px;min-width:0;padding:clamp(22px,3vw,34px);border:1px solid var(--line-l);border-top:3px solid var(--brass-d);border-radius:2px;background:#fff}
+.vac h3{font:500 clamp(18px,1.8vw,22px)/1.25 var(--display);letter-spacing:-.01em;overflow-wrap:anywhere}
+.vac p{color:var(--muted-l)}
+.vac-act{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+@media (min-width:900px){ .vac-list{grid-template-columns:1fr 1fr} }
+@media (max-width:420px){ .vac-act .btn{width:100%} }
+
+/* Rekvizīti */
+.rq-btns{display:flex;flex-wrap:wrap;gap:10px}
+.rq .rk-box .copy{justify-self:auto}
+/* 26.10: the company name over the details table (Kontakti, Rekvizīti) broke inside the word ("CONSTRUCT / A"): smaller, and never split a word */
+.kt-rk .head h2{font-size:clamp(1.6rem,3vw,2.4rem);overflow-wrap:normal}

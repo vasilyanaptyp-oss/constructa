@@ -188,9 +188,11 @@
     }
   }
 
-  /* Objects page: map tabs (Rīga, Jūrmala, Germany) and the link between a list row and its pin (hover or focus lights up both) */
-  var tabs = [].slice.call(doc.querySelectorAll('.mtabs [role="tab"]'));
-  if (tabs.length) {
+  /* tabs (every role="tablist" of the page): the map areas of the Objects page (Rīga, Jūrmala, Germany) and the three directions band (home, Pakalpojumi).
+     Click, Arrow keys, Home / End; the panels are hidden in the HTML except the first, so nothing jumps while the page loads */
+  [].forEach.call(doc.querySelectorAll('[role="tablist"]'), function (list) {
+    var tabs = [].slice.call(list.querySelectorAll('[role="tab"]'));
+    if (!tabs.length) return;
     var pick = function (tab, focus) {
       tabs.forEach(function (x) {
         var on = x === tab; x.setAttribute('aria-selected', on ? 'true' : 'false'); x.tabIndex = on ? 0 : -1;
@@ -206,13 +208,40 @@
       });
     });
     pick(tabs.filter(function (x) { return x.getAttribute('aria-selected') === 'true'; })[0] || tabs[0]);
-    var hot = function (slug, on) { [].forEach.call(doc.querySelectorAll('[data-pin="' + slug + '"]'), function (el) { el.classList.toggle('hot', on); }); };
-    [].forEach.call(doc.querySelectorAll('[data-pin]'), function (el) {
-      var sl = el.getAttribute('data-pin');
-      el.addEventListener('mouseenter', function () { hot(sl, true); });
-      el.addEventListener('mouseleave', function () { hot(sl, false); });
-      el.addEventListener('focusin', function () { hot(sl, true); });
-      el.addEventListener('focusout', function () { hot(sl, false); });
-    });
+  });
+
+  /* Objects page: a list row and its map pin light up together (hover or focus) */
+  var hot = function (slug, on) { [].forEach.call(doc.querySelectorAll('[data-pin="' + slug + '"]'), function (el) { el.classList.toggle('hot', on); }); };
+  [].forEach.call(doc.querySelectorAll('[data-pin]'), function (el) {
+    var sl = el.getAttribute('data-pin');
+    el.addEventListener('mouseenter', function () { hot(sl, true); });
+    el.addEventListener('mouseleave', function () { hot(sl, false); });
+    el.addEventListener('focusin', function () { hot(sl, true); });
+    el.addEventListener('focusout', function () { hot(sl, false); });
+  });
+
+  /* Objects page: filter by type of work (chips; projekti/?veids=rekonstrukcija|jaunbuve|renovacija from the directions band). Empty years disappear,
+     the year counts follow, the pins of other types fade; the address bar keeps the filter, so the page can be shared or reloaded as it is */
+  var ol = doc.querySelector('.ol-list');
+  if (ol) {
+    var fch = [].slice.call(ol.querySelectorAll('.ofilters .chip')), orows = [].slice.call(ol.querySelectorAll('.orow')),
+        oyears = [].slice.call(ol.querySelectorAll('.oyear')), opins = [].slice.call(doc.querySelectorAll('.mpin')),
+        w1 = ol.getAttribute('data-obj1'), wn = ol.getAttribute('data-objs');
+    var applyF = function (f, keep) {
+      fch.forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-f') === f ? 'true' : 'false'); });
+      orows.forEach(function (r) { r.hidden = !(f === '*' || r.getAttribute('data-work') === f); });
+      oyears.forEach(function (y) {
+        var n = y.querySelectorAll('.orow:not([hidden])').length, sp = y.querySelector('.oyear-h span');
+        y.hidden = !n; if (sp) sp.textContent = n + ' ' + (n === 1 ? w1 : wn);
+      });
+      opins.forEach(function (p) { p.classList.toggle('off', !(f === '*' || p.getAttribute('data-work') === f)); });
+      if (keep && window.history && history.replaceState) {
+        var q = f === '*' ? '' : '?veids=' + f;
+        history.replaceState(null, '', location.pathname + q + location.hash);
+      }
+    };
+    fch.forEach(function (c) { c.addEventListener('click', function () { applyF(c.getAttribute('data-f'), true); }); });
+    var q0 = location.search.match(/[?&]veids=([\w-]+)/);
+    if (q0 && fch.some(function (c) { return c.getAttribute('data-f') === q0[1]; })) applyF(q0[1], false);
   }
 })();
