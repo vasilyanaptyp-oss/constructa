@@ -99,10 +99,10 @@
     });
   });
 
-  /* projects: filter + lightbox */
-  var grid = doc.querySelector('.pgrid'), lb = doc.getElementById('lb');
-  if (grid && lb) {
-    var chips = [].slice.call(doc.querySelectorAll('.chip')), cards = [].slice.call(grid.querySelectorAll('.pitem'));
+  /* projects: filter (the team's objects only) + lightbox (every card of the page: our work and the objects) */
+  var lb = doc.getElementById('lb');
+  if (lb) {
+    var chips = [].slice.call(doc.querySelectorAll('.filters .chip')), cards = [].slice.call(doc.querySelectorAll('.pgrid-p .pitem'));
     chips.forEach(function (c) {
       c.addEventListener('click', function () {
         var f = c.getAttribute('data-f');
@@ -111,23 +111,33 @@
       });
     });
     var img = lb.querySelector('.lb-img'), ttl = lb.querySelector('.lb-title'), cnt = lb.querySelector('.lb-count'),
-        prev = lb.querySelector('.lb-prev'), next = lb.querySelector('.lb-next'), set = [], idx = 0, opener = null, swiped = 0;
+        prev = lb.querySelector('.lb-prev'), next = lb.querySelector('.lb-next'), tag = lb.querySelector('.lb-tag'),
+        pcap = lb.querySelector('.lb-pcap'), meta = lb.querySelector('.lb-meta'), note = lb.querySelector('.lb-note'), set = [], idx = 0, opener = null, swiped = 0;
     var show = function (i) {
       idx = (i + set.length) % set.length; var p = set[idx];
       img.removeAttribute('srcset'); img.src = p.src; img.setAttribute('srcset', p.srcset); img.sizes = '100vw';
-      img.width = p.w; img.height = p.h; img.alt = ttl.textContent + ', ' + (idx + 1) + ' / ' + set.length;
+      img.width = p.w; img.height = p.h; img.alt = p.cap || (ttl.textContent + ', ' + (idx + 1) + ' / ' + set.length);
       cnt.textContent = (idx + 1) + ' / ' + set.length;
+      tag.textContent = p.tag || ''; tag.hidden = !p.tag;
+      pcap.textContent = p.cap || ''; pcap.hidden = !p.cap;
       prev.hidden = next.hidden = set.length < 2;
     };
     var open = function (btn) {
-      opener = btn; set = JSON.parse(btn.getAttribute('data-photos')); ttl.textContent = btn.getAttribute('data-title'); show(0);
+      opener = btn; set = JSON.parse(btn.getAttribute('data-photos')); ttl.textContent = btn.getAttribute('data-title');
+      var m = btn.getAttribute('data-meta'), rows = m ? JSON.parse(m) : []; meta.textContent = ''; note.textContent = ''; note.hidden = true;
+      rows.forEach(function (r) {
+        if (!r[0]) { note.textContent = r[1]; note.hidden = false; return; }
+        var d = doc.createElement('div'), dt = doc.createElement('dt'), dd = doc.createElement('dd');
+        dt.textContent = r[0]; dd.textContent = r[1]; d.appendChild(dt); d.appendChild(dd); meta.appendChild(d);
+      });
+      meta.hidden = !meta.children.length; show(0);
       root.classList.add('lb-open');
       if (typeof lb.showModal === 'function') lb.showModal(); else lb.setAttribute('open', '');
     };
     var close = function () { if (typeof lb.close === 'function') lb.close(); else { lb.removeAttribute('open'); onClose(); } };
     var onClose = function () { root.classList.remove('lb-open'); if (opener) opener.focus(); };
     lb.addEventListener('close', onClose);
-    grid.addEventListener('click', function (e) { var b = e.target.closest('.pcard'); if (b) open(b); });
+    doc.addEventListener('click', function (e) { var b = e.target.closest('.pgrid .pcard'); if (b) open(b); });
     prev.addEventListener('click', function () { show(idx - 1); });
     next.addEventListener('click', function () { show(idx + 1); });
     lb.querySelector('.lb-x').addEventListener('click', close);
@@ -139,9 +149,10 @@
       if (x0 === null) return; var dx = e.clientX - x0; x0 = null;
       if (Math.abs(dx) > 50 && set.length > 1) { swiped = Date.now(); show(idx + (dx < 0 ? 1 : -1)); }
     });
-    if (location.hash.indexOf('#p-') === 0) {
+    /* links from the home page: projekti/#p-<object> and projekti/#c-<group> open that card */
+    if (/^#[pc]-/.test(location.hash)) {
       var target = doc.getElementById(location.hash.slice(1));
-      if (target) setTimeout(function () { target.scrollIntoView({ block: 'center' }); open(target.querySelector('.pcard')); }, 250);
+      if (target && target.querySelector('.pcard')) setTimeout(function () { target.scrollIntoView({ block: 'center' }); open(target.querySelector('.pcard')); }, 250);
     }
   }
 })();

@@ -293,7 +293,7 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
 /* services hub */
 .hub{background:var(--paper)}
 .srows{display:grid;gap:clamp(56px,8vw,112px)}
-.srow{display:grid;gap:28px;align-items:center;scroll-margin-top:calc(var(--hh) + 24px)}
+.srow{display:grid;grid-template-columns:minmax(0,1fr);gap:28px;align-items:center;scroll-margin-top:calc(var(--hh) + 24px)}
 .srow-ph{position:relative;display:block;overflow:hidden;aspect-ratio:4/3;border-radius:2px;background:var(--paper-2)}
 .srow-ph img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
 .srow-ph:hover img{transform:scale(1.04)}
@@ -598,3 +598,94 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
 .hero h1 em,.phero:not(.phero-plain) h1 em{color:var(--brass-2)}
 .pcat{color:var(--brass-3)}
 .pteaser::before,.pcard::before{background:linear-gradient(0deg,rgba(13,14,17,.94) 0%,rgba(13,14,17,.66) 40%,rgba(13,14,17,0) 80%)}
+
+/* 25.10 materials: services dropdown with the repair sub-services, "our work" strip, objects with address / date / cost, lightbox caption */
+.dd .dd-sub{margin:0 0 6px;padding:0 0 6px 30px;border-bottom:1px solid var(--line-d)}
+.dd .dd-sub a{padding:7px 14px;font-weight:500;font-size:14px;color:rgba(244,240,232,.7)}
+.dd .dd-sub a:hover,.dd .dd-sub a:focus-visible,.dd .dd-sub a[aria-current="page"]{color:var(--brass-2)}
+.m-sub a.m-sub2{padding:9px 2px 9px 18px;font-weight:500;font-size:15px;color:rgba(244,240,232,.68)}
+.chips a{text-decoration:none;color:inherit}
+.chips a:hover,.chips a:focus-visible{color:var(--brass-d)}
+.sd-subs{padding-top:clamp(56px,7vw,96px)}
+.cw{background:var(--paper-2)}
+.cw h2 em,.pj h2 em{color:var(--brass-d)}
+.cw .eyebrow,.pj .eyebrow{color:var(--brass-d)}
+.cwt{aspect-ratio:4/3}
+.cwt .pmeta{left:14px;right:14px;bottom:12px;gap:5px}
+.cwt .ptitle{font-size:16px}
+.pmeta .paddr{font:600 13.5px/1.35 var(--sans);color:rgba(244,240,232,.84)}
+.pfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:2px}
+.pcost{font:700 12.5px/1.3 var(--sans);letter-spacing:.02em;color:var(--brass-3)}
+.pteasers{background:var(--paper)}
+.pj-works{background:var(--paper)}
+.pj-obj{background:var(--paper-2)}
+.pj .head .sub{max-width:44rem}
+.pgrid-w{grid-template-columns:repeat(2,1fr);grid-auto-rows:200px;gap:10px}
+.pgrid-w .pmeta{left:12px;right:12px;bottom:10px;gap:5px}
+.pgrid-w .ptitle{font-size:15px}
+.pgrid-w .pcount{font-size:12.5px}
+.pj-note{margin:24px 0 0;max-width:46rem;padding-left:14px;border-left:2px solid var(--brass-d);color:var(--muted-l);font-size:15px}
+.pj-obj .filters{margin-top:24px}
+.pj-obj .pgrid-p{margin-top:22px}
+.pgrid-p .pcard .pmeta{gap:6px}
+.lb[open]{grid-template-rows:auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr)}
+.lb-fig{padding-bottom:8px}
+.lb-img{max-height:calc(100dvh - 200px)}
+.lb-cap{display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:7px;padding:4px var(--gut) 18px;text-align:center;min-width:0}
+.lb-cap [hidden]{display:none}
+.lb-tag{margin:0;padding:4px 10px;border-radius:2px;border:1px solid rgba(201,164,106,.55);background:rgba(201,164,106,.14);color:var(--brass-3);font:700 12px/1.3 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.lb-pcap{margin:0;max-width:56rem;font:600 15px/1.45 var(--sans);color:var(--on-d)}
+.lb-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 24px;margin:0;font-size:14px;color:rgba(244,240,232,.86)}
+.lb-meta>div{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 8px;align-items:baseline}
+.lb-meta dt{font:700 11.5px/1.3 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-d)}
+.lb-meta dd{margin:0;font-weight:600}
+.lb-meta .full{flex:0 0 100%;color:var(--brass-3)}
+@media (min-width:640px){
+  .pgrid-w{grid-template-columns:repeat(3,1fr);grid-auto-rows:220px;gap:14px}
+  .obj-grid .pteaser{aspect-ratio:4/3}
+  .lb-img{max-height:calc(100dvh - 176px)}
+}
+@media (min-width:960px){
+  .pgrid-w{grid-template-columns:repeat(4,1fr);grid-auto-rows:230px}
+  .pt-grid.obj-grid{grid-template-columns:repeat(3,1fr)}
+  .dd{min-width:360px}
+}
+@media (max-width:639px){
+  .cw-grid .cwt{aspect-ratio:4/3}
+  .cw-grid,.obj-grid{grid-auto-columns:80%}
+  .cw,.pteasers{overflow:hidden}
+}
+
+/* 25.10 pass 2: object card footer wraps on phones, lightbox note */
+.pfoot{flex-wrap:wrap}
+.pcount{white-space:nowrap}
+@media (max-width:480px){
+  .pfoot{flex-direction:column;align-items:flex-start;gap:5px}
+  .pgrid-p .pcard .pmeta{left:14px;right:14px;bottom:12px}
+  .pgrid-p .ptitle{font-size:17px}
+}
+.lb-note{margin:0;max-width:56rem;font-size:14px;color:var(--brass-3)}
+.lb-note[hidden]{display:none}
+
+/* 25.10: text over photos. The header bar and the text column get their own scrim, so the photo can be swapped without losing contrast (measured with qa_3lang/contrast.py: 4.5 for text, 3 for headings) */
+.hdr:not(.solid):not(.open)::before{content:"";position:absolute;inset:0 0 -44px;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(13,14,17,.72) 0%,rgba(13,14,17,.4) 55%,rgba(13,14,17,0) 100%)}
+@media (min-width:701px){
+  .hero::before{background:
+    linear-gradient(90deg,rgba(13,14,17,.5) 0%,rgba(13,14,17,0) 62%),
+    linear-gradient(180deg,rgba(13,14,17,.55) 0%,rgba(13,14,17,0) 22%),
+    linear-gradient(0deg,rgba(13,14,17,.94) 0%,rgba(13,14,17,.55) 42%,rgba(13,14,17,.08) 72%)}
+  .phero:not(.phero-plain)::before{background:
+    linear-gradient(90deg,rgba(13,14,17,.46) 0%,rgba(13,14,17,0) 66%),
+    linear-gradient(180deg,rgba(13,14,17,.74) 0%,rgba(13,14,17,.47) 32%,rgba(13,14,17,.08) 50%),
+    linear-gradient(0deg,rgba(13,14,17,.95) 0%,rgba(13,14,17,.62) 45%,rgba(13,14,17,.16) 82%)}
+}
+
+/* long words (German) never push a grid or a card wider than the screen */
+.srow h2,.svc h3,.ocard span,.sd-text h2,.head h2,.hsteps h3,.steps h3,.price-list h3,.pr-grid h3,.why h3{overflow-wrap:anywhere}
+.srow-t,.sd-text,.sd-aside,.head{min-width:0}
+
+/* phones: a long object title in the lightbox wraps to two lines instead of being cut */
+@media (max-width:639px){
+  .lb-top{align-items:flex-start}
+  .lb-title{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:15px;line-height:1.25;padding-top:6px}
+}
