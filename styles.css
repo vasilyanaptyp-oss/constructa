@@ -77,6 +77,9 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
 .hdr-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:var(--hh)}
 .logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font:600 15px/1 var(--display);letter-spacing:.16em}
 .logo .mark{width:28px;height:28px;stroke:var(--brass);stroke-width:2}
+/* 12.11 Oleg: his own logo, on a white plate («на домашней странице в белом фоне») */
+.logo{background:#fff;padding:8px 12px;border-radius:2px;line-height:0}
+.logo-img{display:block;height:34px;width:auto}
 .nav{display:none}
 .nav>a,.nav-dd>a{position:relative;text-decoration:none;font-weight:600;font-size:15px;color:rgba(244,240,232,.86);padding:8px 2px}
 .nav>a::after,.nav-dd>a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
@@ -546,6 +549,7 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
 @media (max-width:420px){
   .logo{font-size:13px;letter-spacing:.12em;gap:8px}
   .logo .mark{width:24px;height:24px}
+  .logo{padding:7px 10px}.logo-img{height:24px}
   .hero-cta .btn,.cta-btns .btn,.map-btns .btn{width:100%}
   .steps li{grid-template-columns:62px 1fr}
   .step{font-size:36px}
@@ -556,6 +560,7 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
   .hdr-in{gap:10px}
   .logo{font-size:12px;letter-spacing:.1em;gap:7px}
   .logo .mark{width:22px;height:22px}
+  .logo-img{height:21px}
   .hdr-r{gap:6px}
   .burger{min-width:40px;width:40px;height:40px}
   .lang-t{min-width:46px;height:40px;padding:0 6px 0 8px}
