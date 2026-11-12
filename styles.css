@@ -968,3 +968,47 @@ svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:
 .kt-rk .head h2{font-size:clamp(1.6rem,3vw,2.4rem);overflow-wrap:normal}
 /* 03.11 Oleg: careers only for EU citizens / EU residence permit holders */
 .kr-note{margin-top:16px;max-width:40rem;padding:12px 16px;border-left:3px solid var(--brass);background:rgba(13,14,17,.55);color:#f4f0e8;font:600 clamp(15px,1.4vw,17px)/1.5 var(--sans)}
+
+/* 12.11 Oleg: «верхняя полоса полностью белая, закладки на белой полосе» — the whole header (info strip + logo + menu) is white,
+   colours from his logo: anthracite #2B2E34 text, brick red #B24A2A accents */
+.hdr,.hdr.solid,.hdr.open{background:#fff;color:#2B2E34;border-bottom:1px solid rgba(21,23,27,.1);-webkit-backdrop-filter:none;backdrop-filter:none}
+.hdr.solid{box-shadow:0 12px 30px -20px rgba(13,14,17,.45)}
+.tbar{background:#fff;border-bottom:1px solid rgba(21,23,27,.08)}
+.tbar-l{color:#6b6e75}
+.tbar-r a{color:#2B2E34}
+.tbar-r a:hover{color:#B24A2A}
+.tbar-r svg{color:#B24A2A}
+.logo{background:none;padding:0;border-radius:0}
+.nav>a,.nav-dd>a{color:#2B2E34}
+.nav>a:hover,.nav-dd>a:hover,.nav a[aria-current="page"]{color:#15171b}
+.nav>a::after,.nav-dd>a::after{height:2px;bottom:1px;background:#B24A2A}
+.dd-t{color:rgba(43,46,52,.6)}
+.dd-t:hover{color:#B24A2A}
+.dd,.lang-menu{background:#fff;border-color:rgba(21,23,27,.12);box-shadow:0 30px 60px -28px rgba(13,14,17,.45)}
+.dd a,.lang-menu a{color:#2B2E34}
+.dd a:hover,.dd a:focus-visible,.lang-menu a:hover,.lang-menu a:focus-visible{background:#f3f2ef;color:#15171b}
+.dd a span{color:#B24A2A}
+.dd a[aria-current="page"]{color:#B24A2A}
+.dd .dd-all{border-top-color:rgba(21,23,27,.1);color:#B24A2A}
+.lang-t,.burger{border-color:rgba(21,23,27,.2);color:#2B2E34}
+.lang-t:hover{border-color:#B24A2A;color:#B24A2A}
+.lang-inline{border-color:rgba(21,23,27,.2)}
+.lang-inline a{color:#2B2E34}
+.lang-inline a:hover{background:#f3f2ef;color:#B24A2A}
+.lang-inline .cur{background:#2B2E34;color:#fff}
+.mnav{border-top-color:rgba(21,23,27,.1);background:#fff}
+.mnav>a:not(.btn),.m-row>a{color:#2B2E34;border-bottom-color:rgba(21,23,27,.1)}
+.mnav>a span,.m-row>a span,.m-t{color:#B24A2A}
+.m-row,.m-sub{border-bottom-color:rgba(21,23,27,.1)}
+.m-t{border-left-color:rgba(21,23,27,.1)}
+.m-sub a{color:#3d4047}
+.m-sub a:hover{color:#B24A2A}
+.m-lang a,.m-lang span{border-color:rgba(21,23,27,.2);color:#2B2E34}
+.m-lang span{border-color:#B24A2A;color:#B24A2A;background:rgba(178,74,42,.06)}
+.m-lang a:hover{border-color:#B24A2A;color:#B24A2A}
+.ftr .logo{background:#fff;padding:8px 12px;border-radius:2px}   /* footer stays dark: his logo keeps its white plate there */
+.nav a[aria-current],.nav-dd>a[aria-current]{color:#15171b}
+.mnav>a[aria-current]{color:#B24A2A}
+.hdr:not(.solid):not(.open)::before{display:none}   /* the dark legibility gradient is not needed on a white header */
+.mnav .btn-line{border-color:rgba(21,23,27,.25);color:#2B2E34;background:transparent}
+.mnav .btn-line:hover{border-color:#B24A2A;color:#B24A2A}
